@@ -1,5 +1,21 @@
 <?php
    include('session.php');
+   $error = "";
+   $success = "";
+   if($_SERVER["REQUEST_METHOD"] == "POST") {
+   		$postText = mysqli_real_escape_string($db,$_POST['text']);
+   		$sqlPut = "INSERT INTO posts (postText, `time`, userID) VALUES('$postText', '".date('Y-m-d H:i:s')."', $id);";
+
+   		if (!$postText) {
+   			$error = "You need to write something before you can post it dumbass!";
+   		}
+   		else if(mysqli_query($db,$sqlPut)) {
+   			$success = "Post successful!";
+   		}
+   		else {
+   			$error = "SQL Internal Server Error";
+   		}
+   }
 ?>
 <html">
    
@@ -40,23 +56,45 @@
     <div class="row">
           <div class="col-lg-12">
             <div align="center" class="page-header">
-              <h1 id="containers">Containers</h1>
+              <!--<h1 id="containers">Yay</h1> -->
             </div>
             <div class="bs-component">
               <div class="jumbotron">
-                <h2 align="center" class="display-3">Welcome, <?php echo $username; ?>!</h1>
-                <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+                <h2 align="center" class="display-3">Welcome, <?php echo $firstName; ?>!</h1>
+                <p class="lead">Welcome to the homepage, add a post for your friends to see! More functionality coming soon!</p>
                 <hr class="my-4">
-                <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+                <form action = "" method = "post">
+	                <div align = "center" class="form-group">
+	                    <textarea class="form-control" id="exampleTextarea" name="text" placeholder="Say something :)" rows="3"></textarea><br />
+	                    <input class="btn btn-primary btnjumbotron-lg" type = "submit" name = "createPost" value = " Create Post "/><br />
+	                    <div style = "font-size:11px; color:#cc0000; margin-top:10px"><?php echo $error; ?></div> 
+		                  <div style = "font-size:11px; color:#27FF00; margin-top:10px"><?php echo $success; ?></div> 
+	                </div>
+            	</form>
+            	<!--
+                <p>TODO: add posts here :).</p>
                 <p class="lead">
-                  <a class="btn btn-primary btnjumbotron-lg" href="#" role="button">Learn more</a>
+                  <a class="btn btn-primary btnjumbotron-lg" href="#" role="button">This button does nothing</a>
                 </p>
+            	-->
               </div>
             </div>
+		        <?php 
+			        //$sql = "SELECT postID, postText, `time`, userID FROM posts;";
+		        	$sql = "SELECT posts.postText, posts.`time`, admin.firstName, admin.lastName FROM posts INNER JOIN admin ON admin.id = posts.userID ORDER BY posts.postID DESC";
+	         		$result = mysqli_query($db,$sql);
+	         		while($row = mysqli_fetch_assoc($result)) {
+	         			echo "<div align = \"left\" class=\"card border-secondary mb-3\" >";
+	         			echo '<div class="card-header">' . $row["firstName"] . " " . $row["lastName"] . '<span style="float:right;">' . $row["time"]. '</span></div>';
+				        echo "<div class=\"card-body\">";
+				        echo $row["postText"];
+				        echo "</div></div>";
+				    }
+		        ?>
           </div>
         </div>
+        <h2><a href = "logout.php">Sign Out</a></h2>
     </div>
-      <h2><a href = "logout.php">Sign Out</a></h2>
    </body>
    
 </html>

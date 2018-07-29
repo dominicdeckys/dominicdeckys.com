@@ -46,7 +46,7 @@
                 <h2 align="center" class="display-3">Setting</h1>
                 <p align="center" class="lead">Modify your settings here.</p>
                 <hr class="my-4">
-                <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+                <p>Coming soon: update your password!</p>
                 <p class="lead">
                   <a class="btn btn-primary btnjumbotron-lg" href="#" role="button">Learn more</a>
                 </p>

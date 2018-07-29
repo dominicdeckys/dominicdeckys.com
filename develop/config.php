@@ -1,10 +1,10 @@
 <?php
 
-	if (getenv("RDS_DB_SERVER") !== false) {
-	   define('DB_SERVER', getenv("RDS_DB_HOSTNAME"));
-	   define('DB_USERNAME', getenv("RDS_DB_USERNAME"));
-	   define('DB_PASSWORD', getenv("RDS_DB_PASSWORD"));
-	   define('DB_DATABASE', getenv("RDS_DB_NAME"));
+	if (isset($_SERVER['RDS_DB_HOSTNAME'])) {
+	   define('DB_SERVER', $_SERVER['RDS_DB_HOSTNAME'] . ':' . $_SERVER['RDS_PORT']);
+	   define('DB_USERNAME', $_SERVER['RDS_DB_USERNAME']);
+	   define('DB_PASSWORD', $_SERVER['RDS_DB_PASSWORD']);
+	   define('DB_DATABASE', $_SERVER['RDS_DB_NAME']);
 	}
 	else {
 		define('DB_SERVER', 'localhost:3306');
