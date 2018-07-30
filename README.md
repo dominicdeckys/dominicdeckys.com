@@ -1,7 +1,6 @@
 # Dominic Deckys Resume
 Code for the website currently hosted here:
-https://dominicdeckys.000webhostapp.com/#
-Will be hosted at dominicdeckys.com once everything is finished
+https://dominicdeckys.com
 ## Theme Source
 
 Start Bootstrap is an open source library of free Bootstrap templates and themes. All of the free templates and themes on Start Bootstrap are released under the MIT license, which means you can use them for any purpose, even for commercial projects.
