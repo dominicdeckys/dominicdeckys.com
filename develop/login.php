@@ -86,7 +86,7 @@
              <div class="card-header">Login</div>
              <div class="card-body">
                <form action = "" method = "post">
-                  <label>UserName  :</label><input type = "text" name = "email" class = "form-control"/><br /><br />
+                  <label>Email  :</label><input type = "text" name = "email" class = "form-control"/><br /><br />
                   <label>Password  :</label><input type = "password" name = "password" class="<?php echo $passwordClass; ?>" /><br/><br />
                   <div style="text-align: center;">
                      <input class="btn btn-secondary" type = "submit" name = "login" value = " Login "/><br />

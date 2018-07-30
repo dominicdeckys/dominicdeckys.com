@@ -6,21 +6,16 @@
    if($_SERVER["REQUEST_METHOD"] == "POST") {
    		$postText = mysqli_real_escape_string($db,$_POST['text']);
    		$sqlPut = "INSERT INTO posts (postText, `time`, userID) VALUES('$postText', '".date('Y-m-d H:i:s')."', $id);";
+      $sqlPut = "INSERT INTO privateMessages (fromID, toID, messageText, messageTime) VALUES($id, ".$_POST['toID'].", '$postText', '".date('Y-m-d H:i:s')."');";
 
-   		if (isset($_POST['delID'])) {
-   			$sqlDel = "DELETE FROM posts WHERE postID=".$_POST['delID'].";";
-   			if(mysqli_query($db,$sqlDel)) {
-   				$success = "Post deleted successfully";
-   			}
-   			else {
-   				$error = "SQL Internal Server Error";
-   			}
-   		}
-   		else if (!$postText) {
+   		if (!$postText) {
    			$error = "You need to write something before you can post it dumbass!";
    		}
+      else if (!$_POST['toID']) {
+        $error = "Select a user to send your message to.";
+      }
    		else if(mysqli_query($db,$sqlPut)) {
-   			$success = "Post successful!";
+   			$success = "Message sent successfully!";
    		}
    		else {
    			$error = "SQL Internal Server Error";
@@ -47,18 +42,33 @@
             </div>
             <div class="bs-component">
               <div class="jumbotron">
-                <h2 align="center" class="display-3">Welcome, <?php echo $firstName; ?>!</h1>
-                <p class="lead">Welcome to the homepage, add a post for your friends to see! More functionality coming soon!</p>
+                <h2 align="center" class="display-3">Private Messages</h1>
+                <p class="lead">Welcome to the private message page, here you can tell people individually what you think of them.</p>
                 <hr class="my-4">
                 <form action = "" method = "post">
 	                <div align = "center" class="form-group">
 	                    <textarea class="form-control" id="exampleTextarea" name="text" placeholder="Say something :)" rows="3"></textarea><br />
-	                    <input class="btn btn-primary btnjumbotron-lg" type = "submit" name = "createPost" value = " Create Post "/><br />
+                      <div class="form-group" name="toID">
+                        <select name="toID" class="custom-select">
+                          <option selected>Select a user</option>
+                          <?php 
+                          //$sql = "SELECT postID, postText, `time`, userID FROM posts;";
+                          $sql = "SELECT id, firstName, lastName FROM admin;";
+                          $result = mysqli_query($db,$sql);
+                          while($row = mysqli_fetch_assoc($result)) {
+                            if ($row['id'] != $id) {
+                              echo '<option value="'.$row['id'].'">'.$row['firstName']. " " . $row['lastName'].'</option>';
+                            }
+                          }
+                          ?>
+                        </select>
+                      </div>
+	                    <input class="btn btn-primary btnjumbotron-lg" type = "submit" name = "sendMessage" value = " Send Message "/><br />
 	                    <div style = "font-size:11px; color:#cc0000; margin-top:10px"><?php echo $error; ?></div> 
 		                  <div style = "font-size:11px; color:#27FF00; margin-top:10px"><?php echo $success; ?></div> 
 	                </div>
             	</form>
-
+              <p class="lead">Below is your private message stream:</p>
             	<!--
                 <p>TODO: add posts here :).</p>
                 <p class="lead">
@@ -69,16 +79,21 @@
             </div>
 		        <?php 
 			        //$sql = "SELECT postID, postText, `time`, userID FROM posts;";
-		        	$sql = "SELECT posts.postID,admin.id, posts.postText, posts.`time`, admin.firstName, admin.lastName FROM posts INNER JOIN admin ON admin.id = posts.userID ORDER BY posts.postID DESC";
+		        	$sql = "SELECT firstName, lastName, fromID, messageText, messageTime FROM privateMessages INNER JOIN admin ON (toID = id OR fromID = id) AND id <> $id WHERE fromID = $id OR toID = $id ORDER BY privateMessages.messageID DESC;";
 	         		$result = mysqli_query($db,$sql);
 	         		while($row = mysqli_fetch_assoc($result)) {
 	         			echo "<div align = \"left\" class=\"card border-secondary mb-3\" >";
-	         			echo '<div class="card-header">' . $row["firstName"] . " " . $row["lastName"] . '<span style="float:right;">' . $row["time"];
-	         			if ($row['id'] == $id) {
-	         				echo '   <form style="display:inline" action = "" method = "post"><input type="hidden" name="delID" value='.$row['postID'].'></input><input type="submit" class="btn btn-danger" value="Delete"></input></form>';
-	         			}
-				        echo "</span></div><div class=\"card-body\">";
-				        echo $row["postText"];
+
+                echo '<div class="card-header">';
+                if ($row['fromID'] == $id) {
+                  echo "From: $firstName $lastName To: ".$row['firstName'] .' ' .$row['lastName'];
+                }
+                else {
+                  echo "From: ".$row['firstName'] .' ' .$row['lastName']." To: $firstName $lastName ";
+                }
+	         			echo '<span style="float:right;">' . $row["messageTime"]. '</span></div>';
+				        echo "<div class=\"card-body\">";
+				        echo $row["messageText"];
 				        echo "</div></div>";
 				    }
 		        ?>
