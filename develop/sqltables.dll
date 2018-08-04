@@ -1,0 +1,32 @@
+CREATE TABLE `admin` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `passcode` varchar(100) NOT NULL,
+  `firstName` varchar(100) DEFAULT NULL,
+  `lastName` varchar(100) DEFAULT NULL,
+  `favoriteColor` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `posts` (
+  `postID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `postText` text,
+  `time` datetime NOT NULL,
+  `userID` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`postID`),
+  KEY `posts_admin_FK` (`userID`),
+  CONSTRAINT `posts_admin_FK` FOREIGN KEY (`userID`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `privateMessages` (
+  `messageID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `fromID` bigint(20) unsigned NOT NULL,
+  `toID` bigint(20) unsigned NOT NULL,
+  `messageText` text,
+  `messageTime` datetime NOT NULL,
+  PRIMARY KEY (`messageID`),
+  KEY `privateMessages_admin_FK` (`fromID`),
+  KEY `privateMessages_admin_FK_1` (`toID`),
+  CONSTRAINT `privateMessages_admin_FK` FOREIGN KEY (`fromID`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `privateMessages_admin_FK_1` FOREIGN KEY (`toID`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
