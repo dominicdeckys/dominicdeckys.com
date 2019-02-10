@@ -8,21 +8,21 @@
 }
 .turtlechase {
  position:absolute;
- bottom:80%;
+ bottom:75%;
  left:80%;
  z-index:100;
  height:60px;
  width:60px;
  animation-name:turtlerun;
  animation-duration:5s;
- animation-delay:1s;
+ animation-delay:0.5s;
  animation-iteration-count:infinite;
  animation-direction:normal;
  animation-timing-function:ease-in-out
 }
 .turtlerun {
  position:absolute;
- bottom:80%;
+ bottom:75%;
  left:80%;
  z-index:100;
  height:60px;
@@ -36,7 +36,7 @@
 }
 @keyframes turtlerun {
  0% {
-  bottom:80%;
+  bottom:75%;
   left:80%;
  }
  25% {
@@ -44,11 +44,11 @@
   left:80%;
  }
  50% {
-  bottom:20%;
+  bottom:15%;
   left:15%;
  }
  75% {
-  bottom:80%;
+  bottom:70%;
   left:15%;
  }
 }
